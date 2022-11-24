@@ -3,9 +3,12 @@ import { Todo } from "./models/Todo";
 
 let todos: Todo[] = JSON.parse(localStorage.getItem("todos") || "[]");
 
-document.getElementById("clearTodos")?.addEventListener("click", () => {
-  clearTodos(todos);
-});
+export function init() {
+  document.getElementById("clearTodos")?.addEventListener("click", () => {
+    exports.clearTodos(todos);
+  });
+}
+init();
 
 (document.getElementById("newTodoForm") as HTMLFormElement)?.addEventListener(
   "submit",
@@ -81,4 +84,4 @@ function clearTodos(todos: Todo[]) {
   createHtml(todos);
 }
 
-createHtml(todos);
+// createHtml(todos);
