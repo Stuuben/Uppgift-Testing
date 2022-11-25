@@ -1,6 +1,7 @@
 /**
- *@jest-enviorment jsdom
+ * @jest-environment jsdom
  */
+
 import { addTodo, changeTodo, removeAllTodos } from "../ts/functions";
 import { Todo } from "../ts/models/Todo";
 

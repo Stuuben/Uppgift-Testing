@@ -1,18 +1,17 @@
 /**
- * @jest-enviorment jsdom
+ * @jest-environment jsdom
  */
 import * as functions from "../ts/main";
 
 test("Should clear todo", () => {
   //arrange
-  let spy = jest.spyOn(functions, "init").mockReturnValue();
+  const spy = jest.spyOn(functions, "clearTodos").mockReturnValue();
 
-  document.body.innerHTML = `
-<button type="button" id="clearTodos">Rensa lista</button>
-`;
+  document.body.innerHTML = `<button type="button" id="clearTodos">Rensa lista</button>`;
 
+  functions.init();
   //act
-  //document.getElementById("clearTodods")?.click();
+  document.getElementById("clearTodos")?.click();
 
   //assert
   expect(spy).toHaveBeenCalled();

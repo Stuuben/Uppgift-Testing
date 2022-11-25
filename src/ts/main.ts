@@ -8,7 +8,6 @@ export function init() {
     exports.clearTodos(todos);
   });
 }
-init();
 
 (document.getElementById("newTodoForm") as HTMLFormElement)?.addEventListener(
   "submit",
@@ -79,7 +78,7 @@ function displayError(error: string, show: boolean) {
   }
 }
 
-function clearTodos(todos: Todo[]) {
+export function clearTodos(todos: Todo[]) {
   removeAllTodos(todos);
   createHtml(todos);
 }
