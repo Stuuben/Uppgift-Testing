@@ -1,10 +1,13 @@
 /**
  * @jest-environment jsdom
  */
-import * as functions from "../ts/main";
 import { Todo } from "../ts/models/Todo";
-import * as functions2 from "../ts/main";
-import { removeAllTodos } from "../ts/functions";
+import * as functions from "../ts/main";
+import * as FNfunction from "../ts/functions";
+
+afterEach(() => {
+  jest.restoreAllMocks();
+});
 
 test("Should clear todo", () => {
   //arrange
@@ -37,22 +40,6 @@ test("Should add html to div", () => {
   );
 });
 
-/* test("should not add class to div", () => {
-  //Arrange
-  document.body.innerHTML = `
-  <div id="error" class="error"></div>`;
-  let error: string = "Errormsg";
-  let show: boolean = false;
-
-  //Act
-  functions.displayError(error, show);
-
-  //Assert
-  expect(
-    (document.getElementById("error") as HTMLDivElement).classList.length
-  ).toBe(0);
-}); */
-
 test("Should create a html for Todo", () => {
   // arrange
   let spy = jest.spyOn(functions, "createHtml").mockReturnValue();
@@ -67,14 +54,14 @@ test("Should create a html for Todo", () => {
 test("Should not create a html for Todo", () => {
   // arrange
   let spy = jest.spyOn(functions, "displayError").mockReturnValue();
-  let todoText: string = "Göre";
+  let todoText: string = "Gö";
   let todos: Todo[] = [new Todo("Hejhopp", true)];
 
   // act
   functions.createNewTodo(todoText, todos);
 
   // assert
-  expect(spy).toBeCalledTimes(0);
+  expect(spy).toBeCalledTimes(1);
 });
 
 test("Should call changeHtml", () => {
@@ -88,47 +75,73 @@ test("Should call changeHtml", () => {
   expect(spy).toHaveBeenCalled();
 });
 
-/* test("Should call changeTodo", () => {
-  //arrange
-  let spy = jest.spyOn(functions, "clearTodos").mockReturnValue();
-
-  let todo = new Todo("text", false);
-  //act
-  functions.toggleTodo(todo);
-  //assert
-  expect(spy).toHaveBeenCalled();
-}); */
-
-/* test("should be able to click", () => {
-  // Arrange
-  let spy = jest.spyOn(functions, "createNewTodo").mockReturnValue();
-  document.body.innerHTML = ` 
-  <form id="newTodoForm"><div>
-  <input type="text" id="newTodoText" />
-  <button>Skapa</button>
-    </div></form>;`;
-
-  let todos: Todo[] = [new Todo("inlämning", false)];
-  let text = "inlämning";
-  functions.init();
-
-  // Act
-  document.querySelector("button")?.click();
-
-  // Assert
-  expect(spy).toHaveBeenCalled();
-}); */
-
 test("Should add class to div correctly", () => {
   //Arrange
   document.body.innerHTML = `
-  <div id="errorId" class="show"></div>
+  <div id="error" class="error"></div>
   `;
+  let error: string = "Error";
+  let show: boolean = true;
 
   //Act
-  functions.displayError("Error", true);
+  functions.displayError("Error", show);
   //Assert
-  expect(
-    (document.getElementById("errorId") as HTMLDivElement).classList.length
-  ).toBe(1);
+  expect(document.getElementById("error")?.classList.contains("show")).toBe(
+    true
+  );
+});
+
+test("Should not add class to div correctly", () => {
+  //Arrange
+  document.body.innerHTML = `
+  <div id="error" class="error show"></div>
+  `;
+  let error: string = "Error";
+  let show: boolean = false;
+
+  //Act
+  functions.displayError("error", show);
+
+  //Assert
+  expect(document.getElementById("error")?.classList.contains("show")).toBe(
+    false
+  );
+});
+
+test("Should run function correctly", () => {
+  // Arrange
+  let spy1 = jest.spyOn(functions, "createHtml").mockReturnValue();
+  let spy2 = jest.spyOn(FNfunction, "removeAllTodos").mockReturnValue();
+
+  // Act
+  functions.clearTodos([]);
+
+  // Assert
+  expect(spy1).toHaveBeenCalledTimes(1);
+  expect(spy2).toHaveBeenCalledTimes(1);
+});
+
+test("Should create html", () => {
+  // Arrange
+  document.body.innerHTML = `
+ <ul id="todos"></ul>
+ `;
+
+  const todos = [
+    {
+      text: "todo1",
+      done: false,
+    },
+    {
+      text: "todo2",
+      done: true,
+    },
+  ];
+
+  // Act
+  functions.createHtml(todos);
+
+  // Assert
+
+  expect(document.getElementById("todos")?.children.length).toBe(2);
 });
